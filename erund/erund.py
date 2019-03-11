@@ -74,7 +74,7 @@ def parse_args():
     """Parse args."""
     argparser = argparse.ArgumentParser()
     argparser.add_argument('action', default='deploy', nargs='?')
-    argparser.add_argument("--directory", "-D", default="embedrun", nargs="?")
+    argparser.add_argument("--directory", "-D", default="erund", nargs="?")
     argparser.add_argument("--device", "-d", default=None, nargs="?")
     return argparser.parse_args()
 
@@ -125,8 +125,8 @@ def D(device):  # pylint: disable=invalid-name
 def main():
     """Main."""
     args = parse_args()
-    load_config_directory(os.path.abspath(args.directory))
     loop = asyncio.get_event_loop()
+    load_config_directory(os.path.abspath(args.directory))
 
     def ask_exit(signame):
         """Signal handler."""
@@ -139,6 +139,7 @@ def main():
 
     try:
         devices = [D(args.device)] if args.device else DEVICES.values()
+        print(args.action)
         loop.run_until_complete(asyncio.gather(*[getattr(d, args.action)() for d in devices if hasattr(d, args.action)]))
     except KeyboardInterrupt:
         pass

@@ -10,16 +10,19 @@ SCP = ['scp']
 async def cmd(command, *args, **kwargs):
     if isinstance(command, list):
         command = ' '.join(command)
+    print("Running command: ", command)
     return await asyncio.create_subprocess_shell(
         command, *args, **kwargs,
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE)
 
 
-async def ssh(host, command, *args, user='root', **kwargs):
+async def ssh(host, command, *args, user='root', rcwd=None, **kwargs):
     if isinstance(command, list):
         command = ' '.join(command)
-    return await cmd(SSH + [f"{user}@{host}", command], *args, **kwargs)
+    if rcwd is not None:
+        command = f'cd {rcwd}; ' + command
+    return await cmd(SSH + [f"{user}@{host}", f"'{command}'"], *args, **kwargs)
 
 
 async def scp(fr, to, *args, **kwargs):
