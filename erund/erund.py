@@ -10,7 +10,6 @@ import inspect
 import logging
 import re
 import signal
-import schedule
 import uvloop
 
 

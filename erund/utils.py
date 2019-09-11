@@ -17,7 +17,11 @@ async def cmd(command, *args, **kwargs):
         stderr=asyncio.subprocess.PIPE)
 
 
-async def ssh(host, command, *args, user='root', rcwd=None, **kwargs):
+async def cmdout(*args, **kwargs):
+    return (await (await cmd(*args, **kwargs)).communicate())[0].decode('utf-8').strip()
+
+
+async def ssh(host, user, command, *args, rcwd=None, **kwargs):
     if isinstance(command, list):
         command = ' '.join(command)
     if rcwd is not None:
